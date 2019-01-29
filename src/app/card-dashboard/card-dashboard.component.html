@@ -1,0 +1,81 @@
+<div class="row">
+  <div *ngFor="let carddecks of shuffledCards">
+    <div draggable [dragClass]="'drag-over'" [dragScope]="getSymbol(carddecks.symbol)" [dragData]="carddecks">
+      <div  class="card" style="width:100%;margin:5px;margin-left:20px">
+        <div class="card-header" [ngStyle]="{'color':getColor(carddecks.symbol)}">{{carddecks.symbol}}</div>
+        <div class="card-body">{{carddecks.name}}</div>
+        <div class="card-footer" [ngStyle]="{'color':getColor(carddecks.symbol)}">{{carddecks.symbol}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center" *ngIf="isResetVisible" style="margin:20px">
+  <button type="button" class="btn btn-warning" (click)="resetCards()">Reset</button>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <div class="card card-outline-primary mb-3" droppable [dragOverClass]="'drag-target-border'" [dropScope]="'heart'"
+      [dragHintClass]="'drag-hint'" (onDrop)="onCardDrop($event)">
+      <div class="card-header card-inverse card-primary">
+        Drop Hearts
+      </div>
+      <div class="card-block scroll-list">
+        <div *ngFor="let item of droppedCards.heartsDropped" class="list-group-item">
+          <div class="row">
+            <div>{{item.name}}</div>
+            <div [ngStyle]="{'color':getColor(item.symbol)}">{{item.symbol}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card card-outline-primary mb-3" droppable [dragOverClass]="'drag-target-border'" [dropScope]="'diamond'"
+      [dragHintClass]="'drag-hint'" (onDrop)="onCardDrop($event)">
+      <div class="card-header card-inverse card-primary">
+        Drop Diamond
+      </div>
+      <div class="card-block scroll-list">
+        <div *ngFor="let item of droppedCards.diamondDropped" class="list-group-item">
+          <div class="row">
+            <div>{{item.name}}</div>
+            <div [ngStyle]="{'color':getColor(item.symbol)}">{{item.symbol}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card card-outline-primary mb-3" droppable [dragOverClass]="'drag-target-border'" [dropScope]="'club'"
+      [dragHintClass]="'drag-hint'" (onDrop)="onCardDrop($event)">
+      <div class="card-header card-inverse card-primary">
+        Drop Club
+      </div>
+      <div class="card-block scroll-list">
+        <div *ngFor="let item of droppedCards.clubDropped" class="list-group-item">
+          <div class="row">
+            <div>{{item.name}}</div>
+            <div [ngStyle]="{'color':getColor(item.symbol)}">{{item.symbol}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card card-outline-primary mb-3" droppable [dragOverClass]="'drag-target-border'" [dropScope]="'spades'"
+      [dragHintClass]="'drag-hint'" (onDrop)="onCardDrop($event)">
+      <div class="card-header card-inverse card-primary">
+        Drop Spades
+      </div>
+      <div class="card-block scroll-list">
+        <div *ngFor="let item of droppedCards.spadesDropped" class="list-group-item">
+          <div class="row">
+            <div>{{item.name}}</div>
+            <div [ngStyle]="{'color':getColor(item.symbol)}">{{item.symbol}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
