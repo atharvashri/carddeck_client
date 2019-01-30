@@ -31,11 +31,18 @@ export class CardDashboardComponent implements OnInit {
 
   ngOnInit() {
     //this.showCards();
-    this.cardDeckService.getCardDeckData({ user: 'abc' }).subscribe(
+    this.cardDeckService.getCardDeckData({ user: localStorage.getItem('user') }).subscribe(
       (data) => {
-        this.showCards(data);
+        if (data['message'] == "No deck is found") {
+          this.showCards(null);
+        }
+        else {
+          this.showCards(data);
+        }
       },
-      () => {
+      (response) => {
+        console.log(response)
+        //new user
 
       }
     )
@@ -97,6 +104,17 @@ export class CardDashboardComponent implements OnInit {
     let _cardEventType = e.dragData.event;
     this.droppedCards[_cardEventType].push(e.dragData);
     this.removeItem(e.dragData, this.shuffledCards);
+
+    this.cardDeckService.saveCardDeckData({ user: localStorage.getItem('user'), deckData: this.droppedCards }).subscribe(
+      (data) => {
+        console.log(data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+
   }
 
   removeItem(item: Card, list: Array<Card>) {
@@ -122,13 +140,19 @@ export class CardDashboardComponent implements OnInit {
   }
 
   checkEventsToRemoveCards(deckEvents) {
+    //check for empty array if empty resolve promise without processing
     return new Promise((resolve) => {
-      deckEvents.forEach((element, index) => {
-        this.cardsToRemoved.push(element)
-        if (deckEvents.length - 1 == index) {
-          resolve()
-        }
-      });
+      if (deckEvents.length != 0) {
+        deckEvents.forEach((element, index) => {
+          this.cardsToRemoved.push(element)
+          if (deckEvents.length - 1 == index) {
+            resolve()
+          }
+        });
+      }
+      else {
+        resolve()
+      }
     })
 
   }
@@ -142,13 +166,13 @@ export class CardDashboardComponent implements OnInit {
             let applyFilter = this.cardsToRemoved;
 
             this.cardsToRemoved.forEach((element, index) => {
+              console.log(this.unShuffledCards.indexOf(element));
               this.unShuffledCards.splice(element, 1)
-              if (this.cardsToRemoved.length - 1 == index){
+
+              if (this.cardsToRemoved.length - 1 == index) {
                 resolve(this.unShuffledCards);
               }
             });
-
-            
           }
           else {
             checkCounter++
@@ -186,6 +210,16 @@ export class CardDashboardComponent implements OnInit {
       diamondDropped: [],
       clubDropped: []
     }
+
+    this.cardDeckService.saveCardDeckData({ user: localStorage.getItem('user'), deckData: this.droppedCards }).subscribe(
+      (data) => {
+        console.log(data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
     this.showCards(null);
   }
 
